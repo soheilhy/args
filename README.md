@@ -1,4 +1,4 @@
-# Introduction
+# Introduction ![Travis Build Status](https://api.travis-ci.org/soheilhy/args.svg?branch=master "Travis Build Status")
 args is a generic library for optional arguments. It is
 inspired by Dave Chaney's
 [functional options idea](http://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis).
