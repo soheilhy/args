@@ -38,12 +38,9 @@ var roundTripper = args.New()
 var timeout = args.NewDuration()
 
 type ServerOpt args.V
-func RoundTripper(i interface{}) ServerOpt {
-	return ServerOpt(roundTripper(i))
-}
-func Timeout(d time.Duration) ServerOpt {
-	return ServerOpt(d)
-}
+func RoundTripper(i interface{}) ServerOpt { return ServerOpt(roundTripper(i)) }
+func Timeout(d time.Duration) ServerOpt { return ServerOpt(d) }
+
 func MyServer(opts ...ServerOpt) {
 	rt := roundTripper.Get(opts)
 	to := timeout.Get(opts)
