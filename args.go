@@ -323,12 +323,13 @@ func (v argVal) arg() *arg {
 }
 
 func get(arg *arg, vals []interface{}) interface{} {
-	for _, val := range vals {
+	for i := len(vals) - 1; 0 <= i; i-- {
+		val := vals[i]
 		switch reflect.TypeOf(val).Kind() {
 		case reflect.Slice:
 			s := reflect.ValueOf(val)
-			for i := 0; i < s.Len(); i++ {
-				if v, ok := s.Index(i).Interface().(V); ok && arg == v.arg() {
+			for j := s.Len() - 1; 0 <= j; j-- {
+				if v, ok := s.Index(j).Interface().(V); ok && arg == v.arg() {
 					return v.val()
 				}
 			}
