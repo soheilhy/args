@@ -34,7 +34,7 @@ To use user-defined types instead of the generic `args.V`,
 you need to write a few lines of boiler-plates:
 
 ```go
-var roundTripper = args.New()
+var roundTripper = args.New(http.DefaultTransport)
 var timeout = args.NewDuration()
 
 type ServerOpt args.V
