@@ -23,15 +23,15 @@ type ServerOpt args.V
 
 // Port, RoundTripper, and Timeout respectively wrap port, roundTripper,
 // and timeout to return ServerOpt instead of args.V.
-func Port(p int) ServerOpt                 { return ServerOpt(port(p)) }
-func RoundTripper(i interface{}) ServerOpt { return ServerOpt(roundTripper(i)) }
-func Timeout(d time.Duration) ServerOpt    { return ServerOpt(timeout(d)) }
+func Port(p int) ServerOpt                       { return ServerOpt(port(p)) }
+func RoundTripper(r http.RoundTripper) ServerOpt { return ServerOpt(roundTripper(r)) }
+func Timeout(d time.Duration) ServerOpt          { return ServerOpt(timeout(d)) }
 
 func MyServer(opts ...ServerOpt) {
 	port := port.Get(opts)
 	fmt.Printf("listening on port %v\n", port)
 
-	rt := roundTripper.Get(opts)
+	rt := roundTripper.Get(opts).(http.RoundTripper)
 	if rt == http.DefaultTransport {
 		fmt.Println("using the default transport")
 	} else {

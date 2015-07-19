@@ -29,15 +29,16 @@
 //		var timeout = args.NewDuration()
 //
 //		type ServerOpt args.V
-//		func RoundTripper(i interface{}) ServerOpt {
-//			return ServerOpt(roundTripper(i))
+//		func RoundTripper(r http.RoundTripper) ServerOpt {
+//			return ServerOpt(roundTripper(r))
 //		}
 //		func Timeout(d time.Duration) ServerOpt {
 //			return ServerOpt(d)
 //		}
 //		func MyServer(opts ...ServerOpt) {
-//			rt := roundTripper.Get(opts)
+//			rt := roundTripper.Get(opts).(http.RoundTripper)
 //			to := timeout.Get(opts)
+//			...
 //		}
 //
 // Note that, args is focused on easy-to-use APIs. It is not efficient
