@@ -16,6 +16,11 @@ func (a A) Get(vals ...interface{}) (val interface{}) {
 	return
 }
 
+// IsSet returns whether the argument is set in the values.
+func (a A) IsSet(vals ...interface{}) bool {
+	return isSet(a(nil).arg(), vals)
+}
+
 // New creates a new argument.
 func New(vals ...V) A {
 	a := &arg{}
@@ -44,6 +49,11 @@ func (a BoolA) Get(vals ...interface{}) (val bool) {
 		return v
 	}
 	return
+}
+
+// IsSet returns whether the argument is set in the values.
+func (a BoolA) IsSet(vals ...interface{}) bool {
+	return isSet(a(false).arg(), vals)
 }
 
 // NewBool creates a new integer argument.
@@ -80,6 +90,11 @@ func (a IntA) Get(vals ...interface{}) (val int) {
 	return
 }
 
+// IsSet returns whether the argument is set in the values.
+func (a IntA) IsSet(vals ...interface{}) bool {
+	return isSet(a(0).arg(), vals)
+}
+
 // NewInt creates a new integer argument.
 func NewInt(vals ...V) IntA {
 	a := &arg{}
@@ -112,6 +127,11 @@ func (a UintA) Get(vals ...interface{}) (val uint) {
 		return v
 	}
 	return
+}
+
+// IsSet returns whether the argument is set in the values.
+func (a UintA) IsSet(vals ...interface{}) bool {
+	return isSet(a(0).arg(), vals)
 }
 
 // NewUint creates a new integer argument.
@@ -148,6 +168,11 @@ func (a Int64A) Get(vals ...interface{}) (val int64) {
 	return
 }
 
+// IsSet returns whether the argument is set in the values.
+func (a Int64A) IsSet(vals ...interface{}) bool {
+	return isSet(a(0).arg(), vals)
+}
+
 // NewInt64 creates a new integer argument.
 func NewInt64(vals ...V) Int64A {
 	a := &arg{}
@@ -180,6 +205,11 @@ func (a Uint64A) Get(vals ...interface{}) (val uint64) {
 		return v
 	}
 	return
+}
+
+// IsSet returns whether the argument is set in the values.
+func (a Uint64A) IsSet(vals ...interface{}) bool {
+	return isSet(a(0).arg(), vals)
 }
 
 // NewUint64 creates a new integer argument.
@@ -216,6 +246,11 @@ func (a Float64A) Get(vals ...interface{}) (val float64) {
 	return
 }
 
+// IsSet returns whether the argument is set in the values.
+func (a Float64A) IsSet(vals ...interface{}) bool {
+	return isSet(a(0).arg(), vals)
+}
+
 // NewFloat64 creates a new integer argument.
 func NewFloat64(vals ...V) Float64A {
 	a := &arg{}
@@ -250,6 +285,11 @@ func (a StringA) Get(vals ...interface{}) (val string) {
 	return
 }
 
+// IsSet returns whether the argument is set in the values.
+func (a StringA) IsSet(vals ...interface{}) bool {
+	return isSet(a("").arg(), vals)
+}
+
 // NewString creates a new integer argument.
 func NewString(vals ...V) StringA {
 	a := &arg{}
@@ -282,6 +322,11 @@ func (a DurationA) Get(vals ...interface{}) (val time.Duration) {
 		return v
 	}
 	return
+}
+
+// IsSet returns whether the argument is set in the values.
+func (a DurationA) IsSet(vals ...interface{}) bool {
+	return isSet(a(0).arg(), vals)
 }
 
 // NewDuration creates a new integer argument.
@@ -341,6 +386,26 @@ func get(arg *arg, vals []interface{}) interface{} {
 		}
 	}
 	return arg.defv
+}
+
+func isSet(arg *arg, vals []interface{}) bool {
+	for i := len(vals) - 1; 0 <= i; i-- {
+		val := vals[i]
+		switch reflect.TypeOf(val).Kind() {
+		case reflect.Slice:
+			s := reflect.ValueOf(val)
+			for j := s.Len() - 1; 0 <= j; j-- {
+				if v, ok := s.Index(j).Interface().(V); ok && arg == v.arg() {
+					return true
+				}
+			}
+
+		default:
+			_, ok := arg.valueOf(val)
+			return ok
+		}
+	}
+	return false
 }
 
 type arg struct {
